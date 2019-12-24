@@ -111,11 +111,11 @@ def copy_tree(src, dst):
     ignored_names = ignore(src, names)
     if not os.path.exists(dst):
         os.makedirs(dst)
-    
+
     for name in names:
         if name in ignored_names:
             continue
-        
+
         src_name = os.path.join(src, name)
         dst_name = os.path.join(dst, name)
         if os.path.isdir(src_name):
@@ -279,7 +279,7 @@ def get_items_configuration(configuration):
                     mongodb_collections = item.get('mongodb_collections', set())
                     mongodb_collections.add(collection)
                     item['mongodb_spiders'], item['mongodb_collections'] = allowed_spiders, mongodb_collections
-        
+
         # MySQL
         mysql_table_map = spider.get('storage').get('mysql').get('tables')
         for mysql_table_map_item in mysql_table_map:
@@ -301,6 +301,38 @@ def get_items_configuration(configuration):
     return items
 
 
+def process_proxy_settings(spider, custom_settings):
+    """
+    process proxy settings
+    :param spider:
+    :return:
+    """
+    proxy_setting = spider.get('proxy', {})
+    if proxy_setting.get('enable'):
+        custom_settings.append({'key': 'PROXY_URL', 'value': proxy_setting.get('uri')})
+        custom_settings.append({
+            'key': 'PROXY_FAIL_TIMES',
+            'value': str(proxy_setting.get('failTimes', '1'))
+        })
+    return spider
+
+def process_dynamic_settings(spider, custom_settings):
+    if spider.get('DYNAMIC', {}) and spider.get('DYNAMIC', {}).get('selected', 'null') != 'null':
+        if spider.get('DYNAMIC', {}).get('selected', 'null') == 'splash':
+            custom_settings.append({
+                'key': 'SPLASH_URL',
+                'value': spider.get('DYNAMIC', {}).get('splash', {}).get('uri')
+            })
+            custom_settings.append({
+                'key': 'SPLASH_CUSTOM_SETTINGS',
+                'value': spider.get('DYNAMIC', {}).get('splash', {}).get('custom_settings', {})
+            })
+            custom_settings.append({
+                'key': 'DUPEFILTER_CLASS',
+                'value': 'scrapy_splash.SplashAwareDupeFilter'
+            })
+    return spider
+
 def process_custom_settings(spider):
     """
     process custom settings of some config items
@@ -308,7 +340,7 @@ def process_custom_settings(spider):
     :return:
     """
     custom_settings = spider.get('custom_settings')
-    
+
     def add_dict_to_custom_settings(custom_settings, keys):
         """
         if config doesn't exist, add default value
@@ -326,11 +358,11 @@ def process_custom_settings(spider):
                     'value': '{}'
                 })
         return custom_settings
-    
+
     keys = ['DOWNLOADER_MIDDLEWARES', 'SPIDER_MIDDLEWARES', 'ITEM_PIPELINES']
     custom_settings = add_dict_to_custom_settings(custom_settings, keys)
     for item in custom_settings:
-        
+
         if item['key'] == 'DOWNLOADER_MIDDLEWARES':
             item_data = json.loads(item['value'])
             if spider.get('cookies', {}).get('enable', {}): item_data[
@@ -353,6 +385,10 @@ def process_custom_settings(spider):
             if spider.get('storage', {}).get('mongodb', {}).get('enable', {}): item_data[
                 'gerapy.pipelines.MongoDBPipeline'] = 301
             item['value'] = json.dumps(item_data)
+    # 代理设置
+    spider = process_proxy_settings(spider, custom_settings)
+    # 其他需要加入custom_settings的设置
+    spider = process_dynamic_settings(spider, custom_settings)
     return spider
 
 
@@ -387,6 +423,7 @@ def generate_project(project_name):
     spiders = configuration.get('spiders')
     for spider in spiders:
         spider = process_custom_settings(spider)
+
         source_tpl_file = join(TEMPLATES_DIR, 'spiders', 'crawl.tmpl')
         new_tpl_file = join(PROJECTS_FOLDER, project_name, project_name, 'spiders', 'crawl.tmpl')
         spider_file = "%s.py" % join(PROJECTS_FOLDER, project_name, project_name, 'spiders', spider.get('name'))

@@ -64,7 +64,8 @@ export default {
     logout: '登出',
     login: '登录',
     reset: '重置',
-    clone: '克隆'
+    clone: '克隆',
+    null: '无'
   },
   heads: {
     home: '首页',
@@ -117,6 +118,7 @@ export default {
     later10Min: '10分钟后',
     laterHalfHour: '半小时后',
     later1Hour: '1小时后',
+    dynamic: '动态页面',
   },
   menus: {
     clients: '主机管理',
@@ -211,6 +213,7 @@ export default {
     innerCode: '类内代码',
     outerCode: '类外代码',
     customSettings: '通用配置',
+    moduleSettings: '模块配置',
     classAttrs: '类属性',
     outProcessor: '输出处理',
     inProcessor: '输入处理',
@@ -267,6 +270,10 @@ export default {
     upload: '上传',
     clone: '克隆',
     address: '地址'
+  },
+  tips: {
+    splashSettings: '例如: {"wait": 20, "timeout":90} ',
+    customSettings: '常用配置有: DEFAULT_REQUEST_HEADERS',
   },
 
 }

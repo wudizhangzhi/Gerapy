@@ -2,6 +2,7 @@
 
 from scrapy import Item, Field
 from scrapy.loader.processors import *
+from w3lib.html import *
 
 {% for item in items %}
 class {{ item.name }}(Item):

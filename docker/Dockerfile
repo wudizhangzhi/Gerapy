@@ -3,7 +3,7 @@ WORKDIR /app
 COPY . /app/source
 COPY ./docker/run.sh /app/run.sh
 RUN cd /app/source \
-    && pip install . \
+    && pip install -i https://pypi.tuna.tsinghua.edu.cn/simple . \
     && chmod a+x /app/run.sh
 VOLUME /app/gerapy
 CMD /bin/bash /app/run.sh

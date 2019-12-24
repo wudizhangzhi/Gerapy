@@ -19,8 +19,7 @@
 			</el-form-item>
 			<div v-if="spider.start_urls.mode === 'list'">
 				<el-form-item>
-					<el-button type="primary" v-if="spider.start_urls.mode === 'list'" class="inline" size="mini"
-										 @click="onAddInput(spider.start_urls.list)">
+					<el-button type="primary" v-if="spider.start_urls.mode === 'list'" class="inline" size="mini" @click="onAddInput(spider.start_urls.list)">
 						<i class="fa fa-plus"></i>
 						{{ $lang.buttons.addUrl }}
 					</el-button>
@@ -78,8 +77,7 @@
 		<!-- 类属性开始 -->
 		<el-form-item :label="$lang.columns.classAttrs">
 			<el-form-item>
-				<el-button type="primary" class="inline" size="mini"
-									 @click="onAddInput(spider.attrs, {'key': null, 'value': null})">
+				<el-button type="primary" class="inline" size="mini" @click="onAddInput(spider.attrs, {'key': null, 'value': null})">
 					<i class="fa fa-plus"></i>
 					{{ $lang.buttons.addAttr }}
 				</el-button>
@@ -115,34 +113,43 @@
 
 		<!-- 提取规则开始 -->
 		<el-form-item>
-			<extractors :extractors="spider.extractors" :items="items" :onAddInput="onAddInput"
-									:onDeleteInput="onDeleteInput"></extractors>
+			<extractors :extractors="spider.extractors" :items="items" :onAddInput="onAddInput" :onDeleteInput="onDeleteInput"></extractors>
 		</el-form-item>
 		<!-- 提取规则结束 -->
 
 		<!-- 存储开始 -->
 		<el-form-item>
-			<storage :storage="spider.storage" :items="items" :onAddInput="onAddInput"
-							 :onDeleteInput="onDeleteInput"></storage>
+			<storage :storage="spider.storage" :items="items" :onAddInput="onAddInput" :onDeleteInput="onDeleteInput"></storage>
 		</el-form-item>
 		<!-- 存储结束 -->
 
 		<!-- 代理开始 -->
-		<!--<el-form-item>-->
-		<!--<proxy :proxy="spider.proxy" :onAddInput="onAddInput" :onDeleteInput="onDeleteInput"></proxy>-->
-		<!--</el-form-item>-->
+		<el-form-item>
+		<proxy :proxy="spider.proxy" :onAddInput="onAddInput" :onDeleteInput="onDeleteInput"></proxy>
+		</el-form-item>
 		<!-- 代理结束 -->
 
 		<!-- Cookies开始 -->
-		<!--<el-form-item>-->
-		<!--<cookies :cookies="spider.cookies" :onAddInput="onAddInput" :onDeleteInput="onDeleteInput"></cookies>-->
-		<!--</el-form-item>-->
+		<el-form-item>
+		<cookies :cookies="spider.cookies" :onAddInput="onAddInput" :onDeleteInput="onDeleteInput"></cookies>
+		</el-form-item>
 		<!-- Cookies结束 -->
+
+		<!-- 动态页面 -->
+		<el-form-item>
+		<dynamic :dynamic="spider.DYNAMIC" :items="items" :onAddInput="onAddInput" :onDeleteInput="onDeleteInput"></dynamic>
+		</el-form-item>
+		<!-- 动态页面结束 -->
 
 		<!-- 配置项开始 -->
 		<el-form-item :label="$lang.columns.customSettings" :style="{marginBottom: '15px'}">
-			<el-button type="primary" class="inline" size="mini"
-								 @click="onAddInput(spider.custom_settings, {'key': null, 'value': null})">
+			<span slot="label">
+				{{$lang.columns.customSettings}}
+				<el-tooltip class="item" effect="dark" content="常用配置有: DEFAULT_REQUEST_HEADERS" placement="top-start">
+		      <i class="el-icon-info"/>
+		    </el-tooltip>
+			</span>
+			<el-button type="primary" class="inline" size="mini" @click="onAddInput(spider.custom_settings, {'key': null, 'value': null})">
 				<i class="fa fa-plus"></i>
 				{{ $lang.buttons.addAttr }}
 			</el-button>
@@ -188,6 +195,7 @@
 	import Parser from './Parser'
 	import Proxy from './Proxy'
 	import Cookies from './Cookies'
+	import Dynamic from './Dynamic'
 	import CodeEditor from '../../components/CodeEditor'
 
 	export default {
@@ -219,6 +227,7 @@
 			Parser,
 			Proxy,
 			Cookies,
+			Dynamic,
 			CodeEditor
 		}
 	}

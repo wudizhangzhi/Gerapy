@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from scrapy.linkextractors import LinkExtractor
-from gerapy.spiders import CrawlSpider
-from gerapy.spiders import Rule
+from gerapy.spiders import *
+# from scrapy.spiders import Rule
+# from scrapy.spiders import CrawlSpider
 from scrapy.loader import ItemLoader
 from ..items import *
 from scrapy.loader.processors import *
@@ -10,7 +11,7 @@ from scrapy.loader.processors import *
 {{ spider.code.out_class }}
 {% endif %}
 
-class {{ spider.name|capitalize }}Spider(CrawlSpider):
+class {{ spider.name|capitalize }}Spider({%- if spider.DYNAMIC.selected == "splash" -%}SplashSpider{%- elif spider.DYNAMIC.selected == "pyppeteer" -%}{%- else -%}CrawlSpider{%- endif -%}):
 
     {%- if spider.code.in_class -%}
     {%- set codes = spider.code.in_class.split('\n') -%}
@@ -22,7 +23,7 @@ class {{ spider.name|capitalize }}Spider(CrawlSpider):
     name = '{{ spider.name }}'
     {% if spider.allowed_domains -%}
     allowed_domains = [
-        {%- for allowed_domain in spider.allowed_domains -%} '{{ allowed_domain }}',{%- endfor -%} 
+        {%- for allowed_domain in spider.allowed_domains -%} '{{ allowed_domain }}',{%- endfor -%}
     ]
     {% endif -%}
     custom_settings = {
@@ -132,10 +133,10 @@ class {{ spider.name|capitalize }}Spider(CrawlSpider):
         loader.add_{{ item.method }}('{{ attr }}', '{{ item.arg }}'{% if item.processor %}, {{ item.processor }}{% endif %}{% if item.re %}, re='{{ item.re }}'{% endif%})
         {% endif -%}
         {%- if item.method == 'attr' -%}
-        loader.add_value('{{ attr }}', response.{{ item.arg }}, {% if item.processor %}, {{ item.processor }}{% endif %}{% if item.re %}, re='{{ item.re }}'{% endif%})
+        loader.add_value('{{ attr }}', response.{{ item.arg }} {% if item.processor %}, {{ item.processor }}{% endif %}{% if item.re %}, re='{{ item.re }}'{% endif%})
         {% endif -%}
         {%- if item.method == 'value' -%}
-        loader.add_value('{{ attr }}', "{{ item.arg }}", {% if item.processor %}, {{ item.processor }}{% endif %}{% if item.re %}, re='{{ item.re }}'{% endif%})
+        loader.add_value('{{ attr }}', "{{ item.arg }}" {% if item.processor %}, {{ item.processor }}{% endif %}{% if item.re %}, re='{{ item.re }}'{% endif%})
         {% endif -%}
         {%- endfor -%}
         {%- endfor -%}

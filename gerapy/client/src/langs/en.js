@@ -117,6 +117,7 @@ export default {
     later10Min: '10 Minute Later',
     laterHalfHour: 'Half Hour Later',
     later1Hour: '1 Hour Later',
+    dynamic: 'dynamic',
   },
   menus: {
     clients: 'Clients',

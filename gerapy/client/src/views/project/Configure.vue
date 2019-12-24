@@ -96,16 +96,14 @@
 
 			<el-form label-width="100px">
 				<el-form-item label-width="0">
-					<el-button type="primary" class="inline" size="mini"
-										 @click="onAddSpider">
+					<el-button type="primary" class="inline" size="mini" @click="onAddSpider">
 						<i class="fa fa-plus"></i>
 						{{ $lang.buttons.addSpider }}
 					</el-button>
 				</el-form-item>
 				<el-form-item label-width="0">
 					<el-collapse v-model="activeSpider" accordion v-if="configuration.spiders.length">
-						<el-collapse-item v-for="(spider, spiderIndex) in configuration.spiders" :name="spiderIndex"
-															:key="spiderIndex">
+						<el-collapse-item v-for="(spider, spiderIndex) in configuration.spiders" :name="spiderIndex" :key="spiderIndex">
 							<spider :projectName="projectName" :spider="spider" :spiderIndex="spiderIndex"
 											:items="configuration.items" :onAddInput="onAddInput"
 											:onDeleteInput="onDeleteInput"></spider>
@@ -283,6 +281,13 @@
 							mongodb: {
 								enable: false,
 								collections: []
+							}
+						},
+						DYNAMIC: {
+							selected: 'null',
+							splash: {
+								custom_settings: null,
+								uri: null,
 							}
 						},
 						start_urls: {

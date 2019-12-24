@@ -28,6 +28,12 @@
 						size="small"></el-input>
 				</el-form-item>
 				<el-form-item :label="$lang.columns.outProcessor" class="inline" label-width="110px">
+					<span slot="label">
+						{{$lang.columns.outProcessor}}
+						<el-tooltip class="item" effect="dark" content="例如: TakeFirst()" placement="top-start">
+				      <i class="el-icon-info"/>
+				    </el-tooltip>
+					</span>
 					<el-input
 						v-model="attr.out_processor"
 						:placeholder="$lang.columns.outProcessor"
